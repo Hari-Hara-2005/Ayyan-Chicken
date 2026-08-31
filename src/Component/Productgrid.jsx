@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { Check } from "lucide-react";
-import { addToCart, selectCartItems } from "../Redux/Cartslice";
+import { addToCart, selectCartItems } from "../Redux/CartSlice";
 
 const ICONS = {
   scale: "/assets/scale.svg",
@@ -91,7 +91,6 @@ const rawProducts = [
     mrp: null,
   },
 ];
-
 
 const products = rawProducts.map((p, index) => ({ ...p, id: index }));
 

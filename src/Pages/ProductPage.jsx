@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { X, Plus, Minus, ShoppingCart, Flame, Check, Zap } from "lucide-react";
-import { addToCart, selectCartItems } from "../Redux/Cartslice";
+import { addToCart, selectCartItems } from "../Redux/CartSlice.jsx";
 import Navbar from "../Component/Navbar";
 import Footer from "../Component/Footer";
 import CustomerReview from "../Component/Customerreview";
