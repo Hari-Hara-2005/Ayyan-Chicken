@@ -547,7 +547,7 @@ export default function ProductPage() {
       <section className="pb-20  bg-[#F3EEE6]">
         <img src="assets/fresh-and-healthy-desktop.jpg" />
       </section>
-      <section className="bg-[#F3EEE6] pb-">
+      <section className="bg-[#F3EEE6] pb-10">
         <Title
           title="Best Selling Items"
           subtitle="Discover our most popular products."

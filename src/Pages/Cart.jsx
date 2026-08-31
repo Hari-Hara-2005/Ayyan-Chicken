@@ -41,13 +41,6 @@ const DELIVERY_ZONES = [
     fee: 0,
     icon: "home",
   },
-  {
-    id: "other",
-    label: "Rest of Tamil Nadu & India",
-    description: "Flat delivery fee applied",
-    fee: 0,
-    icon: "truck",
-  },
 ];
 
 const formatINR = (amount) => `₹${Math.round(amount).toLocaleString("en-IN")}`;
@@ -274,7 +267,7 @@ function OrderSummaryCard({
 
         <button
           onClick={onPlaceOrder}
-          className="mt-[21px] hidden w-full items-center justify-center gap-2 rounded-full bg-[#7A3E2E] py-[11px] text-[0.92rem] font-bold text-white shadow-[0_10px_22px_rgba(122,62,46,0.35)] transition-all duration-150 hover:-translate-y-px hover:bg-[#4E2A1F] active:translate-y-px md:inline-flex"
+          className="mt-[21px] hidden w-full items-center justify-center gap-2 rounded-full bg-[#ED7D2C] py-[11px] text-[0.92rem] font-bold text-white shadow-[0_10px_22px_rgba(122,62,46,0.35)] transition-all duration-150 hover:-translate-y-px hover:bg-[#ec6b0e] active:translate-y-px md:inline-flex"
           style={{ fontFamily: "'Manrope', sans-serif" }}
         >
           <WhatsAppIcon className="h-[18px] w-[18px]" />
@@ -904,7 +897,7 @@ export default function Cart() {
         onSubmit={handleCheckoutSubmit}
       />
 
-      <div className="mt-20 bg-black px-2 sm:mt-32 md:mt-40">
+      <div className=" bg-black px-2 py-10">
         <Footer />
       </div>
 
