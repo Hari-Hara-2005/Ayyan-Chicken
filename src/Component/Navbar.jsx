@@ -21,7 +21,7 @@ const NAV_ITEMS = [
   { label: "Store", to: "/store", icon: Store },
   { label: "Lab Reports", to: "/lab-reports", icon: FlaskConical },
 ];
-//
+
 
 function NavLinkItem({ label, to, icon: Icon, onClick, active, delay }) {
   return (
