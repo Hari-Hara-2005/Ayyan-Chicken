@@ -12,8 +12,7 @@ import {
   Store,
   FlaskConical,
 } from "lucide-react";
-import { selectCartCount } from "../Redux/CartSlice";
-
+import { selectCartCount } from "../Redux/Cartslice";
 
 const NAV_ITEMS = [
   { label: "Home", to: "/", icon: Home },
