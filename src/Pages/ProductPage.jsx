@@ -2,33 +2,13 @@ import { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import {
-  Scale,
-  X,
-  Plus,
-  Minus,
-  ShoppingCart,
-  Flame,
-  Check,
-  Zap,
-} from "lucide-react";
+import { X, Plus, Minus, ShoppingCart, Flame, Check, Zap } from "lucide-react";
 import { addToCart, selectCartItems } from "../Redux/Cartslice";
 import Navbar from "../Component/Navbar";
 import Footer from "../Component/Footer";
 import CustomerReview from "../Component/Customerreview";
 import Title from "../Component/Title";
 
-const DrumstickIcon = ({ className }) => (
-  <svg viewBox="0 0 24 24" fill="none" className={className}>
-    <path
-      d="M14.5 3.5c2 0 4 1.7 4 4.2 0 1.7-.9 2.8-1.9 3.8L9.8 18.3c-1.4 1.4-3.7 1.4-5.1 0s-1.4-3.7 0-5.1l6.8-6.8c1-1 2.1-1.9 3-2.9Z"
-      stroke="currentColor"
-      strokeWidth="1.5"
-      strokeLinejoin="round"
-    />
-    <circle cx="6.2" cy="17.8" r="2" stroke="currentColor" strokeWidth="1.5" />
-  </svg>
-);
 const PLACEHOLDER_PHOTO = "assets/images.jpg";
 const ICONS = {
   scale: "/assets/scale.svg",

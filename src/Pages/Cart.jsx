@@ -16,7 +16,7 @@ import {
 import Footer from "../Component/Footer";
 import Navbar from "../Component/Navbar";
 import Title from "../Component/Title.jsx";
-import { removeFromCart, clearCart, selectCartItems } from "../Redux/cartSlice"; // adjust path to match your project
+import { removeFromCart, clearCart, selectCartItems } from "../Redux/Cartslice"; // adjust path to match your project
 import CartItemCard from "../Component/Cartitemcard.jsx";
 
 /* ----------------------------- Design tokens ----------------------------- */
@@ -308,6 +308,11 @@ function CheckoutModal({ open, onClose, cartItems, zone, total, onSubmit }) {
   });
   const [errors, setErrors] = useState({});
 
+  const handleClose = () => {
+    setStep(1);
+    onClose();
+  };
+
   useEffect(() => {
     if (!open) return;
     const handleKey = (e) => {
@@ -354,10 +359,6 @@ function CheckoutModal({ open, onClose, cartItems, zone, total, onSubmit }) {
   const handleBack = () => setStep(1);
   const handleSubmit = () => {
     if (validateStep2()) onSubmit(form);
-  };
-  const handleClose = () => {
-    setStep(1);
-    onClose();
   };
 
   return (
