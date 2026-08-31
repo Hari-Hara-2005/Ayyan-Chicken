@@ -30,11 +30,13 @@ const cartSlice = createSlice({
   initialState,
   reducers: {
     // payload: { productId, title, image, weight, pieces, price, mrp, qty }
+    // Dedupe rule: same productId + same weight = same line (lineId), so
+    // clicking "Add" again on an already-added variant increments qty
+    // instead of pushing a second, duplicate entry into the cart.
     addToCart: (state, action) => {
       const { productId, title, image, weight, pieces, price, mrp, qty } =
         action.payload;
 
-      // Same product at a different weight is treated as its own cart line
       const lineId = `${productId}-${weight}`;
       const existing = state.items.find((item) => item.lineId === lineId);
 
@@ -97,10 +99,11 @@ export const {
   clearCart,
 } = cartSlice.actions;
 
-// Selectors
 export const selectCartItems = (state) => state.cart.items;
-export const selectCartCount = (state) =>
+export const selectCartQty = (state) =>
   state.cart.items.reduce((sum, i) => sum + i.qty, 0);
+export const selectCartCount = (state) => state.cart.items.length;
+
 export const selectCartTotal = (state) =>
   state.cart.items.reduce((sum, i) => sum + i.qty * i.price, 0);
 

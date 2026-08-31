@@ -1,5 +1,7 @@
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import {
   Scale,
   X,
@@ -9,19 +11,13 @@ import {
   Flame,
   Check,
 } from "lucide-react";
-import { addToCart, selectCartCount } from "../Redux/cartSlice";
-
-/* ---------------------------------------------------------
-   Design tokens
-   ink      #2B2320  charcoal text
-   cream    #FFFBF6  page bg
-   crimson  #A32020  brand red — price, CTA, ribbons
-   crimsonD #7A1717  hover state
-   peach    #FBE7D8  soft tint for chips / tags
-   mustard  #D98E2B  weight-ticket accent
-   sage     #5F8161  "fresh" stamp
-   line     #ECE1D2  hairline borders
---------------------------------------------------------- */
+import {
+  addToCart,
+  selectCartCount,
+  selectCartItems,
+} from "../Redux/cartSlice";
+import Navbar from "../Component/Navbar";
+import Footer from "../Component/Footer";
 
 const DrumstickIcon = ({ className }) => (
   <svg viewBox="0 0 24 24" fill="none" className={className}>
@@ -37,7 +33,7 @@ const DrumstickIcon = ({ className }) => (
 
 const PRODUCTS = [
   {
-    id: "drumstick",
+    id: 1,
     title: "Chicken Drumstick",
     image:
       "https://images.unsplash.com/photo-1587593810167-a84920ea0781?q=80&w=800&auto=format&fit=crop",
@@ -51,7 +47,7 @@ const PRODUCTS = [
     ],
   },
   {
-    id: "curry-cut",
+    id: 2,
     title: "Chicken Curry Cut, Skinless",
     image:
       "https://images.unsplash.com/photo-1604908176997-125f25cc6f3d?q=80&w=800&auto=format&fit=crop",
@@ -65,7 +61,7 @@ const PRODUCTS = [
     ],
   },
   {
-    id: "breast-boneless",
+    id: 3,
     title: "Breast Boneless",
     image:
       "https://images.unsplash.com/photo-1626082927389-6cd097cdc6ec?q=80&w=800&auto=format&fit=crop",
@@ -79,7 +75,7 @@ const PRODUCTS = [
     ],
   },
   {
-    id: "hot-wings",
+    id: 4,
     title: "Chicken Hot Wings, Marinated",
     image:
       "https://images.unsplash.com/photo-1527477396000-e27163b481c2?q=80&w=800&auto=format&fit=crop",
@@ -92,7 +88,7 @@ const PRODUCTS = [
     ],
   },
   {
-    id: "kebab",
+    id: 5,
     title: "Fresh Chicken Kebab",
     image:
       "https://images.unsplash.com/photo-1604908176997-125f25cc6f3d?q=80&w=800&auto=format&fit=crop",
@@ -105,7 +101,7 @@ const PRODUCTS = [
     ],
   },
   {
-    id: "boneless-curry",
+    id: 6,
     title: "Boneless Chicken Curry Cut",
     image:
       "https://images.unsplash.com/photo-1587593810167-a84920ea0781?q=80&w=800&auto=format&fit=crop",
@@ -409,6 +405,7 @@ function ProductDialog({
 export default function ProductPage() {
   const dispatch = useDispatch();
   const cartCount = useSelector(selectCartCount);
+  const cartItems = useSelector(selectCartItems);
 
   const [selections, setSelections] = useState(
     Object.fromEntries(PRODUCTS.map((p) => [p.id, 0])),
@@ -424,6 +421,12 @@ export default function ProductPage() {
   const handleAdd = (id, qty = 1) => {
     const product = PRODUCTS.find((p) => p.id === id);
     const variant = product.variants[selections[id]];
+    const lineId = `${id}-${variant.weight}`;
+
+    // Detect duplicates ourselves so the toast can say the right thing.
+    // The reducer already refuses to create a second line for the same
+    // product+weight, this is purely for the notification copy.
+    const alreadyInCart = cartItems.some((item) => item.lineId === lineId);
 
     dispatch(
       addToCart({
@@ -438,6 +441,19 @@ export default function ProductPage() {
       }),
     );
 
+    if (alreadyInCart) {
+      toast.info(
+        `${product.title} (${variant.weight}) quantity updated in cart`,
+        {
+          autoClose: 1800,
+        },
+      );
+    } else {
+      toast.success(`${product.title} (${variant.weight}) added to cart`, {
+        autoClose: 1800,
+      });
+    }
+
     setAddedId(id);
     window.setTimeout(
       () => setAddedId((cur) => (cur === id ? null : cur)),
@@ -448,57 +464,57 @@ export default function ProductPage() {
   const openProduct = PRODUCTS.find((p) => p.id === openId) || null;
 
   return (
-    <section className="w-full bg-[#FFFBF6] py-10">
-      <style>{`
+    <>
+      <section className="w-full bg-[#FFFBF6] py-10">
+        <style>{`
         @import url('https://fonts.googleapis.com/css2?family=Fraunces:wght@600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@500;600&display=swap');
         section, section * { font-family: 'Inter', sans-serif; }
       `}</style>
 
-      <div className="max-w-6xl mx-auto px-6 sm:px-10 mb-8 flex items-start justify-between">
-        <div>
-          <h1
-            className="text-3xl font-bold text-[#2B2320]"
-            style={{ fontFamily: "'Fraunces', serif" }}
-          >
-            Freshly cut, weighed right
-          </h1>
-          <p className="text-sm text-[#6B5F52] mt-1">
-            Pick a weight, see the price update, tap a card for the full cut.
-          </p>
+        <ToastContainer position="bottom-left" theme="light" />
+        <Navbar />
+        <div className="max-w-6xl mx-auto px-6 sm:px-10 mb-8 flex items-start justify-between">
+          <div>
+            <h1
+              className="text-3xl font-bold text-[#2B2320]"
+              style={{ fontFamily: "'Fraunces', serif" }}
+            >
+              Freshly cut, weighed right
+            </h1>
+            <p className="text-sm text-[#6B5F52] mt-1">
+              Pick a weight, see the price update, tap a card for the full cut.
+            </p>
+          </div>
         </div>
 
-        <div className="flex items-center gap-2 bg-white border border-[#ECE1D2] rounded-full pl-3 pr-4 py-2 shadow-sm shrink-0">
-          <ShoppingCart className="w-4 h-4 text-[#A32020]" strokeWidth={2.2} />
-          <span className="text-sm font-semibold text-[#2B2320]">
-            {cartCount} {cartCount === 1 ? "item" : "items"}
-          </span>
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 max-w-6xl mx-auto px-6 sm:px-10">
+          {PRODUCTS.map((product) => (
+            <ProductCard
+              key={product.id}
+              product={product}
+              selectedIndex={selections[product.id]}
+              onSelectVariant={handleSelectVariant}
+              onOpen={setOpenId}
+              onAdd={handleAdd}
+              justAdded={addedId === product.id}
+            />
+          ))}
         </div>
-      </div>
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 max-w-6xl mx-auto px-6 sm:px-10">
-        {PRODUCTS.map((product) => (
-          <ProductCard
-            key={product.id}
-            product={product}
-            selectedIndex={selections[product.id]}
+        {openProduct && (
+          <ProductDialog
+            product={openProduct}
+            selectedIndex={selections[openProduct.id]}
             onSelectVariant={handleSelectVariant}
-            onOpen={setOpenId}
+            onClose={() => setOpenId(null)}
             onAdd={handleAdd}
-            justAdded={addedId === product.id}
+            justAdded={addedId === openProduct.id}
           />
-        ))}
+        )}
+      </section>
+      <div className="bg-black">
+        <Footer />
       </div>
-
-      {openProduct && (
-        <ProductDialog
-          product={openProduct}
-          selectedIndex={selections[openProduct.id]}
-          onSelectVariant={handleSelectVariant}
-          onClose={() => setOpenId(null)}
-          onAdd={handleAdd}
-          justAdded={addedId === openProduct.id}
-        />
-      )}
-    </section>
+    </>
   );
 }

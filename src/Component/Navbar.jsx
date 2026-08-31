@@ -8,7 +8,7 @@ const NAV_ITEMS = [
   { label: "HOME", to: "/" },
   { label: "About", to: "/about" },
   { label: "Services", to: "/service" },
-  { label: "Pricing", to: "/pricing" },
+  { label: "Product", to: "/product" },
   { label: "Faq", to: "/faq" },
   { label: "CONTACT", to: "/contact-us" },
 ];
@@ -226,7 +226,7 @@ export default function Navbar() {
           </div>
 
           {/* Desktop Contact / Cart Button */}
-          <Link to="/service-booking">
+          <Link to="/cart">
             <button
               data-aos="fade-left"
               data-aos-duration="600"
