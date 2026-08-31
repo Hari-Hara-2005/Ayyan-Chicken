@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { Check } from "lucide-react";
-import { addToCart, selectCartItems } from "../Redux/CartSlice";
+import { addToCart, selectCartItems } from "../Redux/Cartslice";
 
 const ICONS = {
   scale: "/assets/scale.svg",

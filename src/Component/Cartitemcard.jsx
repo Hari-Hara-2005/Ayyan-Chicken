@@ -1,6 +1,6 @@
 import { useDispatch } from "react-redux";
 import { Plus, Minus, Trash2 } from "lucide-react";
-import { incrementQty, decrementQty } from "../Redux/CartSlice"; // adjust path to match your project
+import { incrementQty, decrementQty } from "../Redux/Cartslice"; // adjust path to match your project
 
 const MUTED = "#8a7a6d";
 const PISTACHIO = "#5B7553";

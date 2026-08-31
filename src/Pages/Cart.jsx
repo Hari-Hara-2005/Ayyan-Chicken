@@ -20,7 +20,7 @@ import {
   removeFromCart,
   clearCart,
   selectCartItems,
-} from "../Redux/CartSlice.jsx";
+} from "../Redux/Cartslice.jsx";
 import CartItemCard from "../Component/Cartitemcard.jsx";
 
 /* ----------------------------- Design tokens ----------------------------- */
