@@ -98,6 +98,7 @@ export const {
   decrementQty,
   clearCart,
 } = cartSlice.actions;
+//
 
 export const selectCartItems = (state) => state.cart.items;
 export const selectCartQty = (state) =>
