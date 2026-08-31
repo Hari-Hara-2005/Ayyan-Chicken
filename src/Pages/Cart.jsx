@@ -16,7 +16,11 @@ import {
 import Footer from "../Component/Footer";
 import Navbar from "../Component/Navbar";
 import Title from "../Component/Title.jsx";
-import { removeFromCart, clearCart, selectCartItems } from "../Redux/Cartslice"; // adjust path to match your project
+import {
+  removeFromCart,
+  clearCart,
+  selectCartItems,
+} from "../Redux/Cartslice.jsx"; // adjust path to match your project
 import CartItemCard from "../Component/Cartitemcard.jsx";
 
 /* ----------------------------- Design tokens ----------------------------- */
