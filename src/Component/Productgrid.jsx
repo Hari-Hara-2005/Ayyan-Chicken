@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { Check } from "lucide-react";
-import { addToCart, selectCartItems } from "../Redux/Cartslice";
+import { addToCart, selectCartItems } from "../Redux/CartSlice";
 
 const ICONS = {
   scale: "/assets/scale.svg",
@@ -94,7 +94,7 @@ const rawProducts = [
 
 const products = rawProducts.map((p, index) => ({ ...p, id: index }));
 
-// "Rs. 1040" -> 1040 (cartSlice stores numeric price for totals)
+// "Rs. 1040" -> 1040 (CartSlice stores numeric price for totals)
 function parsePrice(display) {
   if (!display) return 0;
   const digits = display.replace(/[^\d.]/g, "");
