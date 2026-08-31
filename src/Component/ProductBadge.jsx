@@ -51,7 +51,7 @@ function ProductBadge({ label, icon: Icon }) {
 
 export default function ProductsSection() {
   return (
-    <section className="w-full bg-white px-6 py-10 sm:px-10 sm:py-12 flex justify-center">
+    <section className="w-full bg-[#F3EEE6] px-6 py-10 sm:px-10 sm:py-12 flex justify-center">
       <div
         className="grid gap-x-20 gap-y-10
           grid-cols-3

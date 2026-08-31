@@ -1,3 +1,4 @@
+import CustomerReview from "../Component/Customerreview";
 import Footer from "../Component/Footer";
 import MainProductSlide from "../Component/MainProductSlide";
 import Navbar from "../Component/Navbar";
@@ -58,14 +59,14 @@ const reasons = [
 const Home = () => {
   return (
     <>
-      <section className="bg-black">
+      <section className="bg-[black] sm:py-10">
         <Navbar />
         <MainProductSlide />
       </section>
       <section>
         <ProductsSection />
       </section>
-      <section>
+      <section className="bg-[#F3EEE6]">
         <Title
           title="Best Selling Items"
           subtitle="Discover our most popular products."
@@ -73,7 +74,7 @@ const Home = () => {
         />
         <ProductGrid />
       </section>
-      <section>
+      <section className="bg-[#F3EEE6]">
         <Title
           title="Why Choose Fastfood TNC?"
           subtitle="Unmatched Flavors, Quality, and Community Connection."
@@ -104,8 +105,16 @@ const Home = () => {
           ))}{" "}
         </div>
       </section>
-      <section className="pb-20">
+      <section className="bg-[#F3EEE6] pb-20">
         <img src="assets/fresh-and-healthy-desktop.jpg" />
+      </section>
+      <section className="bg-[#F3EEE6] pb-10">
+        <Title
+          title="Customer Review"
+          subtitle="Discover our most popular products."
+          align="centre"
+        />
+        <CustomerReview />
       </section>
       <section className="bg-black">
         <Footer />

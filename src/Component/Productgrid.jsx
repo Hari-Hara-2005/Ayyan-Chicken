@@ -1,10 +1,17 @@
+import { useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import { Check } from "lucide-react";
+import { addToCart, selectCartItems } from "../Redux/Cartslice";
+
 const ICONS = {
   scale: "/assets/scale.svg",
   chickenLeg: "/assets/chicken-leg.svg",
   cart: "/assets/add_shopping_cart.svg",
 };
 
-const products = [
+const rawProducts = [
   {
     image:
       "https://images.unsplash.com/photo-1604908176997-125f25cc6f3d?q=80&w=800&auto=format&fit=crop",
@@ -85,6 +92,16 @@ const products = [
   },
 ];
 
+
+const products = rawProducts.map((p, index) => ({ ...p, id: index }));
+
+// "Rs. 1040" -> 1040 (cartSlice stores numeric price for totals)
+function parsePrice(display) {
+  if (!display) return 0;
+  const digits = display.replace(/[^\d.]/g, "");
+  return Number(digits) || 0;
+}
+
 function RibbonBadge({ text }) {
   return (
     <div className="absolute top-0 right-0 w-16 h-16 overflow-hidden">
@@ -103,7 +120,7 @@ function DiscountBadge({ text }) {
   );
 }
 
-function ProductCard({ product }) {
+function ProductCard({ product, onAdd, justAdded }) {
   const { image, badge, discount, title, weight, pieces, price, mrp } = product;
 
   return (
@@ -152,12 +169,23 @@ function ProductCard({ product }) {
 
           <button
             type="button"
-            className="flex items-center gap-2 bg-orange-400 hover:bg-orange-500 active:scale-95 transition-all duration-150 text-white text-xs font-bold uppercase tracking-wide pl-1 pr-4 py-1 rounded-full shadow-sm"
+            onClick={() => onAdd(product)}
+            className={`flex items-center gap-2 active:scale-95 transition-all duration-150 text-white text-xs font-bold uppercase tracking-wide pl-1 pr-4 py-1 rounded-full shadow-sm ${
+              justAdded ? "bg-green-600" : "bg-[#ED7D2C] hover:bg-orange-500"
+            }`}
           >
             <span className="flex items-center justify-center w-7 h-7 rounded-full bg-white shrink-0">
-              <img src={ICONS.cart} alt="" className="w-4 h-4 object-contain" />
+              {justAdded ? (
+                <Check className="w-4 h-4 text-green-600" strokeWidth={3} />
+              ) : (
+                <img
+                  src={ICONS.cart}
+                  alt=""
+                  className="w-4 h-4 object-contain"
+                />
+              )}
             </span>
-            Add
+            {justAdded ? "Added" : "Add"}
           </button>
         </div>
       </div>
@@ -166,8 +194,48 @@ function ProductCard({ product }) {
 }
 
 export default function ProductGrid() {
+  const dispatch = useDispatch();
+  const cartItems = useSelector(selectCartItems);
+  const [addedId, setAddedId] = useState(null);
+
+  const handleAdd = (product) => {
+    const lineId = `${product.id}-${product.weight}`;
+    const alreadyInCart = cartItems.some((item) => item.lineId === lineId);
+
+    dispatch(
+      addToCart({
+        productId: product.id,
+        title: product.title,
+        image: product.image,
+        weight: product.weight,
+        pieces: product.pieces,
+        price: parsePrice(product.price),
+        mrp: product.mrp ? parsePrice(product.mrp) : null,
+        qty: 1,
+      }),
+    );
+
+    if (alreadyInCart) {
+      toast.info(`${product.title} quantity updated in cart`, {
+        autoClose: 1800,
+      });
+    } else {
+      toast.success(`${product.title} added to cart`, {
+        autoClose: 1800,
+      });
+    }
+
+    setAddedId(product.id);
+    window.setTimeout(
+      () => setAddedId((cur) => (cur === product.id ? null : cur)),
+      1200,
+    );
+  };
+
   return (
-    <section className="w-full bg-white py-10">
+    <section className="w-full bg-[#F3EEE6] py-10">
+      <ToastContainer position="bottom-center" theme="light" />
+
       <div
         className="
           flex md:grid
@@ -186,10 +254,14 @@ export default function ProductGrid() {
       >
         {products.map((p) => (
           <div
-            key={p.title}
+            key={p.id}
             className="shrink-0 w-[72%] sm:w-[45%] md:w-full snap-start"
           >
-            <ProductCard product={p} />
+            <ProductCard
+              product={p}
+              onAdd={handleAdd}
+              justAdded={addedId === p.id}
+            />
           </div>
         ))}
       </div>

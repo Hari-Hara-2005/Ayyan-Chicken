@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -10,14 +10,13 @@ import {
   ShoppingCart,
   Flame,
   Check,
+  Zap,
 } from "lucide-react";
-import {
-  addToCart,
-  selectCartCount,
-  selectCartItems,
-} from "../Redux/cartSlice";
+import { addToCart, selectCartItems } from "../Redux/Cartslice";
 import Navbar from "../Component/Navbar";
 import Footer from "../Component/Footer";
+import CustomerReview from "../Component/Customerreview";
+import Title from "../Component/Title";
 
 const DrumstickIcon = ({ className }) => (
   <svg viewBox="0 0 24 24" fill="none" className={className}>
@@ -30,13 +29,18 @@ const DrumstickIcon = ({ className }) => (
     <circle cx="6.2" cy="17.8" r="2" stroke="currentColor" strokeWidth="1.5" />
   </svg>
 );
-
+const PLACEHOLDER_PHOTO = "assets/images.jpg";
+const ICONS = {
+  scale: "/assets/scale.svg",
+  chickenLeg: "/assets/chicken-leg.svg",
+  cart: "/assets/add_shopping_cart.svg",
+};
+const FALLBACK_IMAGE = "assets/images.jpg";
 const PRODUCTS = [
   {
     id: 1,
     title: "Chicken Drumstick",
-    image:
-      "https://images.unsplash.com/photo-1587593810167-a84920ea0781?q=80&w=800&auto=format&fit=crop",
+    image: PLACEHOLDER_PHOTO,
     description:
       "A fleshy bone-in cut from the lower leg comprising dark meat that's the chicken's most flavourful and tender part.",
     bestFor: "Grilling and deep-frying.",
@@ -49,8 +53,7 @@ const PRODUCTS = [
   {
     id: 2,
     title: "Chicken Curry Cut, Skinless",
-    image:
-      "https://images.unsplash.com/photo-1604908176997-125f25cc6f3d?q=80&w=800&auto=format&fit=crop",
+    image: PLACEHOLDER_PHOTO,
     description:
       "Mixed bone-in pieces from the whole bird, cut to size for a curry pot. Skin removed for a lighter finish.",
     bestFor: "Curries and slow-cooking.",
@@ -63,8 +66,7 @@ const PRODUCTS = [
   {
     id: 3,
     title: "Breast Boneless",
-    image:
-      "https://images.unsplash.com/photo-1626082927389-6cd097cdc6ec?q=80&w=800&auto=format&fit=crop",
+    image: PLACEHOLDER_PHOTO,
     description:
       "Lean, boneless breast fillets trimmed of fat and cartilage. Mild-flavoured and quick to cook through.",
     bestFor: "Grilling, stir-fry, and salads.",
@@ -77,8 +79,7 @@ const PRODUCTS = [
   {
     id: 4,
     title: "Chicken Hot Wings, Marinated",
-    image:
-      "https://images.unsplash.com/photo-1527477396000-e27163b481c2?q=80&w=800&auto=format&fit=crop",
+    image: PLACEHOLDER_PHOTO,
     description:
       "Whole wings marinated in a smoked-paprika chilli rub, ready to go straight from the fridge to the pan.",
     bestFor: "Air-fry, oven-bake, or deep-fry.",
@@ -90,21 +91,19 @@ const PRODUCTS = [
   {
     id: 5,
     title: "Fresh Chicken Kebab",
-    image:
-      "https://images.unsplash.com/photo-1604908176997-125f25cc6f3d?q=80&w=800&auto=format&fit=crop",
+    image: PLACEHOLDER_PHOTO,
     description:
       "Hand-minced kebab, seasoned and shaped fresh to order. Skewer and grill, or shallow-fry as patties.",
     bestFor: "Pan-fry or grill on skewers.",
     variants: [
-      { weight: "250 g", pieces: "6-8 pieces", price: 109, mrp: null },
+      { weight: "250 g", pieces: "6-8 pieces", price: 109, mrp: 200 },
       { weight: "500 g", pieces: "12-14 pieces", price: 199, mrp: null },
     ],
   },
   {
     id: 6,
     title: "Boneless Chicken Curry Cut",
-    image:
-      "https://images.unsplash.com/photo-1587593810167-a84920ea0781?q=80&w=800&auto=format&fit=crop",
+    image: PLACEHOLDER_PHOTO,
     description:
       "All the flavour of curry cut without the bone-picking. Cubed thigh meat, evenly sized for even cooking.",
     bestFor: "Curries, kebabs, and stews.",
@@ -117,6 +116,21 @@ const PRODUCTS = [
 
 function fmt(rupees) {
   return `Rs. ${rupees.toLocaleString("en-IN")}`;
+}
+
+/* Single static image with a fallback if it ever fails to load. */
+function ProductImage({ src, alt, className = "" }) {
+  const [failed, setFailed] = useState(false);
+
+  return (
+    <img
+      src={failed ? FALLBACK_IMAGE : src}
+      alt={alt}
+      loading="lazy"
+      onError={() => setFailed(true)}
+      className={`absolute inset-0 h-full w-full object-cover ${className}`}
+    />
+  );
 }
 
 function WeightTicket({ variants, index, onChange, size = "sm" }) {
@@ -147,7 +161,7 @@ function WeightTicket({ variants, index, onChange, size = "sm" }) {
 function RibbonSeal() {
   return (
     <div
-      className="absolute top-2.5 left-2.5 flex flex-col items-center justify-center w-11 h-11 rounded-full bg-[#5F8161] text-white shadow-sm"
+      className="absolute top-2.5 left-2.5 z-10 flex flex-col items-center justify-center w-11 h-11 rounded-full bg-[#5F8161] text-white shadow-sm"
       style={{ transform: "rotate(-10deg)" }}
     >
       <span className="text-[8px] font-bold uppercase leading-none tracking-wide">
@@ -156,6 +170,21 @@ function RibbonSeal() {
       <span className="text-[7px] font-semibold uppercase leading-none mt-0.5">
         Today
       </span>
+    </div>
+  );
+}
+
+function DeliveryRow() {
+  return (
+    <div className="flex items-center gap-1.5 text-xs text-[#6B5F52]">
+      <span className="flex h-4 w-4 items-center justify-center rounded-full bg-[#FBE7D8]">
+        <Zap
+          className="h-2.5 w-2.5 text-[#D98E2B]"
+          fill="#D98E2B"
+          strokeWidth={0}
+        />
+      </span>
+      Delivery in 30 mins
     </div>
   );
 }
@@ -173,17 +202,18 @@ function ProductCard({
   return (
     <div
       onClick={() => onOpen(product.id)}
-      className="group cursor-pointer bg-white rounded-2xl border border-[#ECE1D2] shadow-sm hover:shadow-md transition-shadow duration-200 overflow-hidden flex flex-col w-full"
+      className="
+    group cursor-pointer bg-white rounded-2xl border border-[#ECE1D2] shadow-sm hover:shadow-md transition-shadow duration-200 overflow-hidden flex flex-col w-full"
     >
-      <div className="relative w-full aspect-[4/3] bg-[#FBE7D8] overflow-hidden">
-        <img
+      <div className="relative w-full   aspect-[4/3] bg-[#FBE7D8] overflow-hidden">
+        <ProductImage
           src={product.image}
           alt={product.title}
-          className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+          className="group-hover:scale-105 transition-transform duration-300"
         />
         <RibbonSeal />
         {variant.mrp && (
-          <div className="absolute bottom-0 right-0 bg-[#A32020] text-white text-xs font-bold px-3 py-1.5 rounded-tl-md">
+          <div className="absolute bottom-0 right-0 z-10 bg-[#A32020] text-white text-xs font-bold px-3 py-1.5 rounded-tl-md">
             {Math.round((1 - variant.price / variant.mrp) * 100)}% OFF
           </div>
         )}
@@ -199,12 +229,16 @@ function ProductCard({
 
         <div className="flex items-center gap-4 text-xs text-[#6B5F52]">
           <span className="flex items-center gap-1.5">
-            <Scale className="w-3.5 h-3.5" strokeWidth={2} />
+            <img src={ICONS.scale} alt="" className="w-4 h-4 object-contain" />
             {variant.weight}
           </span>
           {variant.pieces !== "—" && (
             <span className="flex items-center gap-1.5">
-              <DrumstickIcon className="w-3.5 h-3.5" />
+              <img
+                src={ICONS.chickenLeg}
+                alt=""
+                className="w-4 h-4 object-contain"
+              />
               {variant.pieces}
             </span>
           )}
@@ -238,7 +272,7 @@ function ProductCard({
               onAdd(product.id, 1);
             }}
             className={`flex items-center gap-2 active:scale-95 transition-all duration-150 text-white text-xs font-bold uppercase tracking-wide pl-1 pr-4 py-1 rounded-full shadow-sm ${
-              justAdded ? "bg-[#5F8161]" : "bg-[#D98E2B] hover:bg-[#c17f24]"
+              justAdded ? "bg-[#5F8161]" : "bg-[#ED7D2C] hover:bg-[#df6d1c]"
             }`}
           >
             <span className="flex items-center justify-center w-7 h-7 rounded-full bg-white shrink-0">
@@ -254,6 +288,8 @@ function ProductCard({
             {justAdded ? "Added" : "Add"}
           </button>
         </div>
+
+        <DeliveryRow />
       </div>
     </div>
   );
@@ -272,33 +308,34 @@ function ProductDialog({
 
   return (
     <div
-      className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-[#2B2320]/50"
+      className="fixed inset-0 z-50 flex items-end sm:items-center justify-center bg-[#2B2320]/50 sm:p-4"
       onClick={onClose}
     >
       <div
         onClick={(e) => e.stopPropagation()}
-        className="relative bg-white rounded-2xl shadow-xl w-full max-w-3xl max-h-[90vh] overflow-y-auto grid grid-cols-1 md:grid-cols-2"
+        className="relative bg-white rounded-t-3xl sm:rounded-2xl shadow-xl w-full sm:max-w-3xl max-h-[92vh] sm:max-h-[90vh] overflow-y-auto grid grid-cols-1 md:grid-cols-2"
       >
+        {/* Drag-handle affordance, mobile bottom-sheet only */}
+        <div className="sm:hidden flex justify-center pt-2.5 pb-1">
+          <span className="h-1 w-10 rounded-full bg-[#ECE1D2]" />
+        </div>
+
         <button
           type="button"
           onClick={onClose}
-          className="absolute top-3 right-3 z-10 flex items-center justify-center w-8 h-8 rounded-full bg-white/90 border border-[#ECE1D2] text-[#2B2320] hover:bg-[#FBE7D8] transition-colors"
+          className="absolute top-3 right-3 z-20 flex items-center justify-center w-9 h-9 sm:w-8 sm:h-8 rounded-full bg-white/90 border border-[#ECE1D2] text-[#2B2320] hover:bg-[#FBE7D8] transition-colors"
         >
           <X className="w-4 h-4" strokeWidth={2.4} />
         </button>
 
-        <div className="relative w-full aspect-square md:aspect-auto md:h-full bg-[#FBE7D8]">
-          <img
-            src={product.image}
-            alt={product.title}
-            className="w-full h-full object-cover"
-          />
+        <div className="relative w-full aspect-[4/3] md:aspect-auto md:h-full bg-[#FBE7D8]">
+          <ProductImage src={product.image} alt={product.title} />
           <RibbonSeal />
         </div>
 
-        <div className="flex flex-col p-6 gap-4">
+        <div className="flex flex-col p-5 sm:p-6 gap-3.5 sm:gap-4">
           <h2
-            className="text-2xl font-bold text-[#A32020] leading-tight"
+            className="text-xl sm:text-2xl font-bold text-[#A32020] leading-tight"
             style={{ fontFamily: "'Fraunces', serif" }}
           >
             {product.title}
@@ -325,14 +362,22 @@ function ProductDialog({
             />
           </div>
 
-          <div className="flex items-center gap-4 text-sm text-[#6B5F52]">
+          <div className="flex flex-wrap items-center gap-x-4 gap-y-1.5 text-sm text-[#6B5F52]">
             <span className="flex items-center gap-1.5">
-              <Scale className="w-4 h-4" strokeWidth={2} />
+              <img
+                src={ICONS.scale}
+                alt=""
+                className="w-4 h-4 object-contain"
+              />
               {variant.weight}
             </span>
             {variant.pieces !== "—" && (
               <span className="flex items-center gap-1.5">
-                <DrumstickIcon className="w-4 h-4" />
+                <img
+                  src={ICONS.chickenLeg}
+                  alt=""
+                  className="w-4 h-4 object-contain"
+                />
                 {variant.pieces}
               </span>
             )}
@@ -344,7 +389,7 @@ function ProductDialog({
 
           <div className="flex items-baseline gap-2 mt-1">
             <span
-              className="text-2xl font-bold text-[#2B2320]"
+              className="text-xl sm:text-2xl font-bold text-[#2B2320]"
               style={{ fontFamily: "'JetBrains Mono', monospace" }}
             >
               {fmt(variant.price)}
@@ -356,12 +401,14 @@ function ProductDialog({
             )}
           </div>
 
-          <div className="flex items-center gap-3 mt-2">
-            <div className="flex items-center border border-[#ECE1D2] rounded-full">
+          <DeliveryRow />
+
+          <div className="flex items-center gap-3 mt-2 pb-1">
+            <div className="flex items-center border border-[#ECE1D2] rounded-full shrink-0">
               <button
                 type="button"
                 onClick={() => setQty((q) => Math.max(1, q - 1))}
-                className="w-8 h-8 flex items-center justify-center text-[#2B2320] hover:bg-[#FBE7D8] rounded-full"
+                className="w-9 h-9 sm:w-8 sm:h-8 flex items-center justify-center text-[#2B2320] hover:bg-[#FBE7D8] rounded-full"
               >
                 <Minus className="w-3.5 h-3.5" />
               </button>
@@ -371,7 +418,7 @@ function ProductDialog({
               <button
                 type="button"
                 onClick={() => setQty((q) => q + 1)}
-                className="w-8 h-8 flex items-center justify-center text-[#2B2320] hover:bg-[#FBE7D8] rounded-full"
+                className="w-9 h-9 sm:w-8 sm:h-8 flex items-center justify-center text-[#2B2320] hover:bg-[#FBE7D8] rounded-full"
               >
                 <Plus className="w-3.5 h-3.5" />
               </button>
@@ -381,7 +428,7 @@ function ProductDialog({
               type="button"
               onClick={() => onAdd(product.id, qty)}
               className={`flex-1 flex items-center justify-center gap-2 active:scale-95 transition-all duration-150 text-white text-sm font-bold uppercase tracking-wide py-2.5 rounded-full shadow-sm ${
-                justAdded ? "bg-[#5F8161]" : "bg-[#D98E2B] hover:bg-[#c17f24]"
+                justAdded ? "bg-[#5F8161]" : "bg-[#ED7D2C] hover:bg-[#ce651a]"
               }`}
             >
               {justAdded ? (
@@ -404,7 +451,6 @@ function ProductDialog({
 
 export default function ProductPage() {
   const dispatch = useDispatch();
-  const cartCount = useSelector(selectCartCount);
   const cartItems = useSelector(selectCartItems);
 
   const [selections, setSelections] = useState(
@@ -412,6 +458,15 @@ export default function ProductPage() {
   );
   const [openId, setOpenId] = useState(null);
   const [addedId, setAddedId] = useState(null);
+
+  // Lock background scroll while the product dialog is open — important on
+  // mobile where the sheet sits over the page rather than replacing it.
+  useEffect(() => {
+    document.body.style.overflow = openId ? "hidden" : "";
+    return () => {
+      document.body.style.overflow = "";
+    };
+  }, [openId]);
 
   const handleSelectVariant = (id, index) => {
     setSelections((s) => ({ ...s, [id]: index }));
@@ -423,9 +478,6 @@ export default function ProductPage() {
     const variant = product.variants[selections[id]];
     const lineId = `${id}-${variant.weight}`;
 
-    // Detect duplicates ourselves so the toast can say the right thing.
-    // The reducer already refuses to create a second line for the same
-    // product+weight, this is purely for the notification copy.
     const alreadyInCart = cartItems.some((item) => item.lineId === lineId);
 
     dispatch(
@@ -465,7 +517,7 @@ export default function ProductPage() {
 
   return (
     <>
-      <section className="w-full bg-[#FFFBF6] py-10">
+      <section className="w-full bg-[#F3EEE6] py-10">
         <style>{`
         @import url('https://fonts.googleapis.com/css2?family=Fraunces:wght@600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@500;600&display=swap');
         section, section * { font-family: 'Inter', sans-serif; }
@@ -473,7 +525,7 @@ export default function ProductPage() {
 
         <ToastContainer position="bottom-left" theme="light" />
         <Navbar />
-        <div className="max-w-6xl mx-auto px-6 sm:px-10 mb-8 flex items-start justify-between">
+        <div className="max-w-6xl mx-auto px-6 sm:px-10 mb-8 flex items-start justify-between py-10">
           <div>
             <h1
               className="text-3xl font-bold text-[#2B2320]"
@@ -511,6 +563,17 @@ export default function ProductPage() {
             justAdded={addedId === openProduct.id}
           />
         )}
+      </section>
+      <section className="pb-20  bg-[#F3EEE6]">
+        <img src="assets/fresh-and-healthy-desktop.jpg" />
+      </section>
+      <section className="bg-[#F3EEE6] pb-">
+        <Title
+          title="Best Selling Items"
+          subtitle="Discover our most popular products."
+          align="centre"
+        />
+        <CustomerReview />
       </section>
       <div className="bg-black">
         <Footer />

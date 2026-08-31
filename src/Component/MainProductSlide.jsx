@@ -17,7 +17,7 @@ const BANNERS = [
   },
   {
     id: 3,
-    image_url: "assets/banner.jpg",
+    image_url: "assets/banner-1.jpeg",
     link: "/nuts",
     is_active: false,
   },
@@ -29,7 +29,7 @@ const BANNERS = [
   },
   {
     id: 5,
-    image_url: "assets/banner.jpg",
+    image_url: "assets/banner-1.jpeg",
     link: "/dates",
     is_active: false,
   },
@@ -161,7 +161,7 @@ const MainProductSlide = () => {
           }
 
           .swiper-pagination-bullet-active {
-            background: #92553D;
+            background: #ED7D2C;
             transform: scale(1.6);
           }
 

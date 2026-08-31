@@ -695,7 +695,7 @@ const EmptyCart = () => (
     </p>
     <button
       onClick={() => window.history.back()}
-      className="rounded-full bg-[#7A3E2E] px-8 py-[10px] font-bold text-white shadow-[0_10px_20px_rgba(122,62,46,0.28)] transition-colors hover:bg-[#4E2A1F]"
+      className="rounded-full bg-[#ED7D2C] px-8 py-[10px] font-bold text-white shadow-[0_10px_20px_rgba(122,62,46,0.28)] transition-colors hover:bg-[#d86716]"
       style={{ fontFamily: "'Manrope', sans-serif" }}
     >
       Continue Shopping

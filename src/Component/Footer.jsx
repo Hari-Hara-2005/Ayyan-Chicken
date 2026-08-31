@@ -224,10 +224,10 @@ function Footer() {
       >
         {/* Logo */}
 
-        <div className="flex justify-center my-10 sm:my-14">
-          <div className="flex items-center justify-center bg-black rounded-full w-32 h-32 sm:w-28 sm:h-28 md:w-44 md:h-44 -my-6 sm:-my-9">
+        <div className="flex justify-center my-10 sm:my-0 sm:mb-10">
+          <div className="flex items-center justify-center bg-black rounded-full w-32 h-32 sm:w-28 sm:h-28 md:w-44 md:h-44 -my-6 sm:-my-16">
             <img
-              src="Images/logo.png"
+              src="assets/logo.png"
               alt="Ayyan Chicken"
               className="w-24 h-24 sm:w-32 sm:h-32 md:w-32 md:h-32 rounded-full"
             />
@@ -333,13 +333,13 @@ function Footer() {
 
       {/* ================= MOBILE ================= */}
 
-      <div className="block md:hidden">
+      <div className="block md:hidden px-8">
         {/* Logo */}
 
-        <div className="flex justify-center my-10 sm:my-12">
-          <div className="flex items-center justify-center bg-black rounded-full w-32 h-44 sm:w-44 sm:h-44 -my-6 sm:-my-8">
+        <div className="flex justify-center my-0 mb-10 sm:my-12">
+          <div className="flex items-center justify-center bg-black rounded-full w-32 h-32 sm:w-44 sm:h-44 -my-12 sm:-my-8">
             <img
-              src="Images/logo.png"
+              src="assets/logo.png"
               alt="Ayyan Chicken"
               className="w-24 h-24 sm:w-32 sm:h-32 rounded-full"
             />
@@ -468,7 +468,7 @@ function Footer() {
 
       {/* ================= COPYRIGHT ================= */}
 
-      <div className="w-full flex flex-col gap-3 pt-16 pb-3">
+      <div className="w-full flex flex-col gap-3  pb-3">
         <div className="flex flex-col w-full justify-center items-center">
           <p className="text-[1rem] sm:text-[.75rem] md:text-[12px] lg:text-[15px] xl:text-[1.3rem] text-[#f6f6f6] text-center">
             © {new Date().getFullYear()} Ayyan Chicken. All Rights Reserved.
