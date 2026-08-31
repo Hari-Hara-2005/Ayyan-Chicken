@@ -37,8 +37,7 @@ export default function Title({
       >
         {" "}
         {title}{" "}
-      </h2>{" "}
-      {/* Subtitle / Description */}{" "}
+      </h2>{" "}{" "}
       {subtitle && (
         <p
           data-aos="zoom-in-up"
