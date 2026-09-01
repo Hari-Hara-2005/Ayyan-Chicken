@@ -4,10 +4,10 @@ import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { X, Plus, Minus, ShoppingCart, Flame, Check, Zap } from "lucide-react";
 import { addToCart, selectCartItems } from "../Redux/CartSlice";
-import Navbar from "../Component/Navbar";
 import Footer from "../Component/Footer";
 import CustomerReview from "../Component/Customerreview";
 import Title from "../Component/Title";
+import PageTitleBanner from "../Component/Pagetitlebanner";
 
 const PLACEHOLDER_PHOTO = "assets/images.jpg";
 const ICONS = {
@@ -497,14 +497,19 @@ export default function ProductPage() {
 
   return (
     <>
+      <PageTitleBanner
+        title="Products"
+        breadcrumbs={[
+          { label: "Home", href: "/" },
+          { label: "Products", href: "#", active: true },
+        ]}
+      />
       <section className="w-full bg-[#F3EEE6] py-10">
         <style>{`
         @import url('https://fonts.googleapis.com/css2?family=Fraunces:wght@600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@500;600&display=swap');
         section, section * { font-family: 'Inter', sans-serif; }
       `}</style>
-
         <ToastContainer position="bottom-left" theme="light" />
-        <Navbar />
         <div className="max-w-6xl mx-auto px-6 sm:px-10 mb-8 flex items-start justify-between py-10">
           <div>
             <h1

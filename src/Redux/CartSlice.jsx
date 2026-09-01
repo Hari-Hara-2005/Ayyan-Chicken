@@ -22,17 +22,13 @@ function saveCartToStorage(items) {
 }
 
 const initialState = {
-  items: loadCartFromStorage(), // [{ lineId, productId, title, image, weight, pieces, price, mrp, qty }]
+  items: loadCartFromStorage(),
 };
 
 const CartSlice = createSlice({
   name: "cart",
   initialState,
   reducers: {
-    // payload: { productId, title, image, weight, pieces, price, mrp, qty }
-    // Dedupe rule: same productId + same weight = same line (lineId), so
-    // clicking "Add" again on an already-added variant increments qty
-    // instead of pushing a second, duplicate entry into the cart.
     addToCart: (state, action) => {
       const { productId, title, image, weight, pieces, price, mrp, qty } =
         action.payload;

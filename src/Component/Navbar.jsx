@@ -8,7 +8,6 @@ import {
   ChevronRight,
   Home,
   Beef,
-  LayoutGrid,
   Store,
   FlaskConical,
 } from "lucide-react";
@@ -17,11 +16,9 @@ import { selectCartCount } from "../Redux/CartSlice";
 const NAV_ITEMS = [
   { label: "Home", to: "/", icon: Home },
   { label: "Product", to: "/product", icon: Beef },
-  { label: "Categories", to: "/categories", icon: LayoutGrid },
   { label: "Store", to: "/store", icon: Store },
   { label: "Lab Reports", to: "/lab-reports", icon: FlaskConical },
 ];
-
 
 function NavLinkItem({ label, to, icon: Icon, onClick, active, delay }) {
   return (
